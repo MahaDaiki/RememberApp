@@ -1,1 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+
+.bg {
+  background: linear-gradient(to bottom, #7c87c7, #ddb4d2)no-repeat;
+  margin-bottom: 45vh;
+
+}
