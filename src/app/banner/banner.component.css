@@ -1,0 +1,280 @@
+
+
+
+
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 100vh;
+
+}
+
+.banner {
+  text-align: center;
+  background: #eaeaea;
+  border-radius: 20px;
+  padding: 20px 100px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+  z-index: 2;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transform: scale(1.05);
+}
+
+
+.banner h1 {
+  font-size: 3.5rem;
+  font-weight: bold;
+  margin: 0;
+  text-shadow: 0 9px 6px rgba(0, 0, 0, 0.3);
+  font-family: cursive;
+}
+
+.color-text .letter {
+  font-size: 8rem;
+  display: inline-block;
+  font-weight: 900;
+  text-shadow: 1px 12px 5px rgba(0, 0, 0, 0.4);
+}
+
+.shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.6);
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
+  opacity: 0.9;
+}
+
+
+.red-square {
+  width: 100px;
+  height: 100px;
+  background: #D83F5D;
+  top: -30px;
+  left: -30px;
+}
+
+.red-circle {
+  width: 120px;
+  height: 120px;
+  background: #D83F5D;
+  top: -50px;
+  right: -50px;
+  border-radius: 50%;
+}
+
+.purple-square {
+  width: 80px;
+  height: 80px;
+  background: #76589E;
+  bottom: -30px;
+  left: -30px;
+  border-radius: 15px;
+}
+
+.orange-square {
+  width: 70px;
+  height: 70px;
+  background: #FBB752;
+  top: -50px;
+  right: 15%;
+  border-radius: 15px;
+}
+
+.blue-circle {
+  width: 100px;
+  height: 100px;
+  background: #4F6EAE;
+  bottom: -50px;
+  right: -30px;
+  border-radius: 50%;
+}
+
+.green-circle {
+  width: 80px;
+  height: 80px;
+  background: #7A994B;
+  bottom: 25%;
+  left: -50px;
+  border-radius: 50%;
+}
+
+.red {
+  color: #D83F5D;
+}
+
+.purple {
+  color: #76589E;
+}
+
+.green {
+  color: #7A994B;
+}
+
+.blue {
+  color: #4F6EAE;
+}
+
+.yellow {
+  color: #FBB752;
+}
+
+.floating-circle {
+  position: absolute;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: float 5s ease-in-out infinite;
+  background-color: rgba(124, 135, 199, 0.51);
+}
+
+.floating-circle:nth-child(1) {
+  top: 20%;
+  left: 10%;
+  animation-duration: 6s;
+}
+
+.floating-circle:nth-child(2) {
+  top: 40%;
+  left: 5%;
+  animation-duration: 7s;
+}
+
+.floating-circle:nth-child(3) {
+  top: 60%;
+  left: 15%;
+  animation-duration: 5s;
+}
+
+.floating-circle:nth-child(4) {
+  top: 30%;
+  right: 10%;
+  animation-duration: 6.5s;
+}
+
+.floating-circle:nth-child(5) {
+  top: 50%;
+  right: 20%;
+  animation-duration: 8s;
+}
+
+.floating-circle:nth-child(6) {
+  top: 70%;
+  right: 30%;
+  animation-duration: 7.5s;
+}
+
+
+
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+.play-button {
+  margin-top: 1rem;
+  display: inline-block;
+  padding: 10px 20px;
+  background: linear-gradient(45deg, #D83F5D, #FBB752, #76589E);
+  background-size: 200%;
+  border: none;
+  border-radius: 50px;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+  transition: background-position 0.5s ease, transform 0.2s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.play-button:hover {
+  background-position: right;
+  transform: scale(1.1);
+}
+
+.play-button:active {
+  transform: scale(0.95);
+}
+
+.play-button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50px;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+.play-button:hover:before {
+  opacity: 1;
+}
+@media (max-width: 768px) {
+  .banner {
+    padding: 30px;
+  }
+
+  .banner h1 {
+    font-size: 2rem;
+  }
+
+  .color-text .letter {
+    font-size: 2.5rem;
+  }
+
+  .play-button {
+    padding: 10px 15px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner {
+    padding: 20px;
+  }
+
+  .banner h1 {
+    font-size: 1.8rem;
+  }
+
+  .color-text .letter {
+    font-size: 2rem;
+  }
+
+  .play-button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+
+  .shape, .floating-circle {
+    display: none;
+  }
+}
+
