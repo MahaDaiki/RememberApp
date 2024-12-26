@@ -1,0 +1,14 @@
+<div class="game-page">
+  <h1>Level {{ level }}</h1>
+  <div class="timer" *ngIf="!gameOver">
+    Time left: {{ timeLeft }} seconds
+  </div>
+  <app-color-buttons></app-color-buttons>
+
+  <div class="game-over-popup" *ngIf="gameOver">
+    <div class="popup-content">
+      <h2>Game Over!</h2>
+      <button class="restart-button" (click)="restartGame()">Restart Game</button>
+    </div>
+  </div>
+</div>

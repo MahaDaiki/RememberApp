@@ -1,0 +1,10 @@
+<div class="color-buttons-container">
+  <div
+    *ngFor="let color of shuffledColors"
+    [id]="color"
+    [style.backgroundColor]="color"
+    class="color-button"
+    (click)="onColorClick(color)">
+  </div>
+</div>
+<button class="submit-button" (click)="onSubmit()" >Submit</button>
