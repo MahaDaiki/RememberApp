@@ -1,11 +1,15 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { GameModule } from './game/game.module';
+import { GamePageComponent } from './game/game-page/game-page.component'
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css'],
+  standalone: true,
+  imports: [RouterOutlet],
 })
 export class AppComponent {
   title = 'RememberApp';
