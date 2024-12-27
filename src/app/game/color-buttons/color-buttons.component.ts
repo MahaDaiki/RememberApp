@@ -15,13 +15,13 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
       })),
       state('on', style({
         transform: 'scale(1.1)',
-        filter: 'brightness(1.5)'
+        filter: 'brightness(2)'
       })),
       transition('off => on', [
         animate('0.2s ease-in')
       ]),
       transition('on => off', [
-        animate('0.2s ease-out')
+        animate('0.3s ease-out')
       ])
     ])
   ]
@@ -47,7 +47,6 @@ export class ColorButtonsComponent {
   onClick(color: string): void {
     if (!this.isIlluminating) {
       this.onColorClick(color);
-      // Quick flash when clicked
       this.setIlluminated(color, true);
       setTimeout(() => this.setIlluminated(color, false), 200);
     }
