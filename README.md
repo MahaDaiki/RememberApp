@@ -1,4 +1,15 @@
 # RememberApp
+Le projet "Memory Game" consiste à développer un jeu classique de mémoire où les joueurs doivent reproduire une séquence de couleurs affichée à l'écran. À chaque niveau, la séquence s’allonge, augmentant la difficulté.
+
+# Fonctionnalités principales :
+## Commencer le jeu : Une séquence initiale de deux couleurs s'affiche brièvement pour mémorisation.
+## Reproduire la séquence : Les joueurs cliquent sur les boutons colorés dans l’ordre correct.
+## Validation et réinitialisation : Validez votre réponse ou recommencez si nécessaire.
+## Calcul du score : Le score dépend de la rapidité et de la précision du joueur.
+## Progression : Chaque niveau réussi ajoute une nouvelle couleur à la séquence.
+## Animations interactives : Les couleurs s’illuminent et les boutons réagissent visuellement.
+
+
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.
 
