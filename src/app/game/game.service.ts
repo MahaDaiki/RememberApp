@@ -8,6 +8,12 @@ export class GameService {
   private sequence: string[] = [];
   private timeTaken: number = 0;
 
+  private maxScore: number = 100;
+  private minScore: number = 1;
+  private timePenalty: number = 5;
+
+  private totalScore: number = 0;
+
   constructor() {
     this.startNewGame();
   }
@@ -23,6 +29,8 @@ export class GameService {
     this.level = 1;
     this.sequence = [];
     this.timeTaken = 0;
+    this.totalScore = 0;
+    this.addColorToSequence();
     this.addColorToSequence();
   }
 
@@ -59,5 +67,19 @@ export class GameService {
 
   getTimeTaken(): number {
     return this.timeTaken;
+  }
+
+  calculateScore(): number {
+    let score = this.maxScore - (this.timeTaken * this.timePenalty);
+    if (score < this.minScore) {
+      score = this.minScore;
+    }
+    this.totalScore += score;
+
+    return score;
+  }
+
+  getTotalScore(): number {
+    return this.totalScore;
   }
 }

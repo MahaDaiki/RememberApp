@@ -36,7 +36,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
   showCorrectPopup: boolean = false;
   lastScore: number = 0;
 
-  constructor(private gameService: GameService) {}
+  constructor(protected gameService: GameService) {}
 
   ngOnInit(): void {
     this.startNewGame();
@@ -57,6 +57,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
     this.elapsedTime = 0;
     this.showCorrectPopup = false;
     this.displaySequence();
+
   }
 
   private clearTimer(): void {
@@ -70,7 +71,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
   displaySequence(): void {
     this.isIlluminating = true;
     this.showButtons = true;
-    let sequenceDelay = 1000;
+    let sequenceDelay = 1500;
 
     this.timeLeft = 15;
 
@@ -89,26 +90,31 @@ export class GamePageComponent implements OnInit, OnDestroy {
       if (this.colorButtons) {
         this.colorButtons.setIlluminated(color, true);
         setTimeout(() => this.colorButtons.setIlluminated(color, false), 500);
+        this.colorButtons.pulseButton(color);
       }
     };
 
-    const loopSequence = () => {
-      this.sequence.forEach((color, index) => {
-        setTimeout(() => illuminateColor(color), index * sequenceDelay);
-      });
-
-
-      const sequenceDuration = this.sequence.length * sequenceDelay;
-
-
-      setTimeout(() => {
-        if (this.timeLeft > 0) {
-          loopSequence();
-        }
-      }, sequenceDuration);
-    };
-
-    loopSequence();
+    this.sequence.forEach((color, index) => {
+      setTimeout(() => illuminateColor(color), index * sequenceDelay);
+    });
+    //
+    // const loopSequence = () => {
+    //   this.sequence.forEach((color, index) => {
+    //     setTimeout(() => illuminateColor(color), index * sequenceDelay);
+    //   });
+    //
+    //
+    //   const sequenceDuration = this.sequence.length * sequenceDelay;
+    //
+    //
+    //   setTimeout(() => {
+    //     if (this.timeLeft > 0) {
+    //       loopSequence();
+    //     }
+    //   }, sequenceDuration);
+    // };
+    //
+    // loopSequence();
   }
 
 
@@ -123,7 +129,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
     const button = document.getElementById(color);
     if (button) {
       button.classList.add('illuminated');
-      setTimeout(() => button.classList.remove('illuminated'), 500);
+      setTimeout(() => button.classList.remove('illuminated'), 1000);
     }
   }
 
@@ -140,7 +146,7 @@ export class GamePageComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.clearTimer();
     this.gameService.recordTimeTaken(this.elapsedTime);
-    this.lastScore = this.elapsedTime;
+    this.lastScore = this.gameService.calculateScore();
 
     if (this.gameService.verifySequence(this.userSequence)) {
       this.showCorrectPopup = true;

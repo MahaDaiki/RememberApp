@@ -51,4 +51,12 @@ export class ColorButtonsComponent {
       setTimeout(() => this.setIlluminated(color, false), 200);
     }
   }
+
+  pulseButton(color: string): void {
+    const button = document.getElementById(color);
+    if (button) {
+      button.classList.add('pulsing');
+      setTimeout(() => button.classList.remove('pulsing'), 1500);
+    }
+  }
 }

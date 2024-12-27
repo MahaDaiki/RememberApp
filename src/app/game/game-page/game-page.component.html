@@ -1,6 +1,12 @@
 <div class="game-page">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
   <h1>Level {{ level }}</h1>
-
+    <div class="score">
+        <h2>Total Score: {{ gameService.getTotalScore() }}</h2>
+    </div>
   <div class="timer" *ngIf="!gameOver && showButtons">
     <ng-container *ngIf="timeLeft > 0">
       Memorize the sequence: {{ timeLeft }} seconds left
@@ -17,15 +23,14 @@
   </app-color-buttons>
 
   <div class="controls" *ngIf="!isIlluminating && !gameOver">
-    <button class="submit-button" (click)="onSubmit()" [disabled]="userSequence.length !== sequence.length">
+    <button class="submit-button button" (click)="onSubmit()" [disabled]="userSequence.length !== sequence.length">
       Validate
     </button>
-    <button class="reset-button" (click)="onReset()">Reset</button>
+    <button class="submit-button button" (click)="onReset()">Reset</button>
   </div>
 
   <div class="sequence-display" *ngIf="!gameOver && !isIlluminating">
     <div class="selected-colors">
-      Your sequence:
       <div *ngFor="let color of userSequence"
            class="color-preview"
            [style.backgroundColor]="color">
