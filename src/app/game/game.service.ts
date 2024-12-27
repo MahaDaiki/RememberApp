@@ -6,8 +6,7 @@ import { Injectable } from '@angular/core';
 export class GameService {
   private level: number = 1;
   private sequence: string[] = [];
-  private userSequence: string[] = [];
-  private timeTaken: number = 0; // Time taken by the user in seconds
+  private timeTaken: number = 0;
 
   constructor() {
     this.startNewGame();
@@ -23,23 +22,20 @@ export class GameService {
   startNewGame(): void {
     this.level = 1;
     this.sequence = [];
-    this.userSequence = [];
     this.timeTaken = 0;
-    this.sequence = this.createSequence();
+    this.addColorToSequence();
   }
 
-  private createSequence(): string[] {
-    const newSequence = [...this.sequence];
+  private addColorToSequence(): void {
     const randomColor = this.getRandomRGBColor();
-    newSequence.push(randomColor);
-    return newSequence;
+    this.sequence.push(randomColor);
   }
 
   getSequence(): string[] {
-    return this.sequence;
+    return [...this.sequence];
   }
 
-  shuffleSequence(): string[] {
+  shuffleColors(): string[] {
     const shuffled = [...this.sequence];
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -54,7 +50,7 @@ export class GameService {
 
   nextLevel(): void {
     this.level++;
-    this.sequence = this.createSequence();
+    this.addColorToSequence();
   }
 
   recordTimeTaken(time: number): void {
@@ -63,9 +59,5 @@ export class GameService {
 
   getTimeTaken(): number {
     return this.timeTaken;
-  }
-
-  resetGame(): void {
-    this.startNewGame();
   }
 }

@@ -1,6 +1,7 @@
-import { Component, OnInit  } from '@angular/core';
-import {RouterModule} from '@angular/router';
+import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import { GameService } from '../game.service';
+import { trigger, state, style, animate, transition } from '@angular/animations';
+import {ColorButtonsComponent} from '../color-buttons/color-buttons.component';
 
 
 @Component({
@@ -9,15 +10,31 @@ import { GameService } from '../game.service';
   templateUrl: './game-page.component.html',
   styleUrls: ['./game-page.component.css'],
   standalone:false,
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms', style({ opacity: 1 })),
+      ]),
+      transition(':leave', [
+        animate('300ms', style({ opacity: 0 }))
+      ])
+    ])
+  ]
 })
-export class GamePageComponent implements OnInit {
+export class GamePageComponent implements OnInit, OnDestroy {
   sequence: string[] = [];
+  shuffledColors: string[] = [];
   userSequence: string[] = [];
   level: number = 1;
   timeLeft: number = 15;
   timer: any;
-  gameOver: boolean = false;
+  elapsedTime: number = 0;
   isIlluminating: boolean = false;
+  gameOver: boolean = false;
+  showButtons: boolean = false;
+  showCorrectPopup: boolean = false;
+  lastScore: number = 0;
 
   constructor(private gameService: GameService) {}
 
@@ -25,28 +42,81 @@ export class GamePageComponent implements OnInit {
     this.startNewGame();
   }
 
-  startNewGame(): void {
-    this.gameService.startNewGame();
-    this.sequence = this.gameService.getSequence();
-    this.userSequence = [];
-    this.level = 1;
-    this.gameOver = false;
-    this.illuminateSequence();
+  ngOnDestroy(): void {
+    this.clearTimer();
   }
 
-  illuminateSequence(): void {
+  startNewGame(): void {
+    this.clearTimer();
+    this.gameService.startNewGame();
+    this.sequence = this.gameService.getSequence();
+    this.level = 1;
+    this.userSequence = [];
+    this.gameOver = false;
+    this.showButtons = false;
+    this.elapsedTime = 0;
+    this.showCorrectPopup = false;
+    this.displaySequence();
+  }
+
+  private clearTimer(): void {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+  }
+
+  @ViewChild(ColorButtonsComponent) colorButtons!: ColorButtonsComponent;
+
+  displaySequence(): void {
     this.isIlluminating = true;
-    let delay = 0;
+    this.showButtons = true;
+    let sequenceDelay = 1000;
 
-    this.sequence.forEach((color) => {
-      setTimeout(() => this.highlightButton(color), delay);
-      delay += 1000; // 1-second delay per color
-    });
+    this.timeLeft = 15;
 
-    setTimeout(() => {
-      this.isIlluminating = false;
-      this.startTimer();
-    }, this.sequence.length * 1000); // End illumination after sequence
+    this.timer = setInterval(() => {
+      this.timeLeft--;
+      if (this.timeLeft <= 0) {
+        this.clearTimer();
+        this.isIlluminating = false;
+        this.shuffleColors();
+        this.startResponseTimer();
+      }
+    }, 1000);
+
+
+    const illuminateColor = (color: string) => {
+      if (this.colorButtons) {
+        this.colorButtons.setIlluminated(color, true);
+        setTimeout(() => this.colorButtons.setIlluminated(color, false), 500);
+      }
+    };
+
+    const loopSequence = () => {
+      this.sequence.forEach((color, index) => {
+        setTimeout(() => illuminateColor(color), index * sequenceDelay);
+      });
+
+
+      const sequenceDuration = this.sequence.length * sequenceDelay;
+
+
+      setTimeout(() => {
+        if (this.timeLeft > 0) {
+          loopSequence();
+        }
+      }, sequenceDuration);
+    };
+
+    loopSequence();
+  }
+
+
+  startResponseTimer(): void {
+    this.elapsedTime = 0;
+    this.timer = setInterval(() => {
+      this.elapsedTime++;
+    }, 1000);
   }
 
   highlightButton(color: string): void {
@@ -57,51 +127,38 @@ export class GamePageComponent implements OnInit {
     }
   }
 
-  startTimer(): void {
-    this.timeLeft = 15;
-    this.timer = setInterval(() => {
-      this.timeLeft--;
-      if (this.timeLeft === 0) {
-        clearInterval(this.timer);
-        this.checkSequence();
-      }
-    }, 1000);
+  shuffleColors(): void {
+    this.shuffledColors = this.gameService.shuffleColors();
   }
 
-  checkSequence(): void {
-    clearInterval(this.timer);
+  handleColorClick = (color: string): void => {
+    if (this.isIlluminating || this.gameOver) return;
+    this.userSequence.push(color);
+    this.highlightButton(color);
+  }
+
+  onSubmit(): void {
+    this.clearTimer();
+    this.gameService.recordTimeTaken(this.elapsedTime);
+    this.lastScore = this.elapsedTime;
 
     if (this.gameService.verifySequence(this.userSequence)) {
-      alert('Correct! Proceeding to the next level.');
-      this.level++;
-      const nextSequence = this.gameService.nextLevel();
-      if (Array.isArray(nextSequence)) {
-        this.sequence = nextSequence;
-      } else {
-        console.error('nextLevel did not return a valid sequence.');
-      }
-
-      this.userSequence = [];
-      this.illuminateSequence();
+      this.showCorrectPopup = true;
+      setTimeout(() => {
+        this.showCorrectPopup = false;
+        this.level++;
+        this.gameService.nextLevel();
+        this.sequence = this.gameService.getSequence();
+        this.userSequence = [];
+        this.displaySequence();
+      }, 2000);
     } else {
-      alert('Incorrect! Game Over.');
       this.gameOver = true;
     }
   }
 
-
-  addToUserSequence(color: string): void {
-    if (!this.isIlluminating && !this.gameOver) {
-      this.userSequence.push(color);
-    }
-  }
-
-  restartGame(): void {
-    this.startNewGame();
-  }
-
-  enableSubmit(): boolean {
-    return this.userSequence.length === this.sequence.length;
+  onReset(): void {
+    this.userSequence = [];
   }
 }
 

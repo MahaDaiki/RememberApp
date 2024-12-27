@@ -1,85 +1,55 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { GameService } from '../game.service';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-color-buttons',
   templateUrl: './color-buttons.component.html',
   styleUrl: './color-buttons.component.css',
   standalone: false,
+  animations: [
+    trigger('illumination', [
+      state('off', style({
+        transform: 'scale(1)',
+        filter: 'brightness(1)'
+      })),
+      state('on', style({
+        transform: 'scale(1.1)',
+        filter: 'brightness(1.5)'
+      })),
+      transition('off => on', [
+        animate('0.2s ease-in')
+      ]),
+      transition('on => off', [
+        animate('0.2s ease-out')
+      ])
+    ])
+  ]
 })
-export class ColorButtonsComponent implements OnInit {
-  sequence: string[] = [];
-  shuffledColors: string[] = [];
-  userSequence: string[] = [];
-  isIlluminating: boolean = false;
-  chronoStart: number | null = null; // Start time for the chrono
-  chronoTime: number = 0; // Time taken in seconds
+export class ColorButtonsComponent {
+  @Input() colors: string[] = [];
+  @Input() isIlluminating: boolean = false;
+  @Input() onColorClick!: (color: string) => void;
 
-  constructor(private gameService: GameService) {}
+  // Track illumination state for each button
+  illuminatedStates: { [key: string]: string } = {};
 
-  ngOnInit(): void {
-    this.sequence = this.gameService.getSequence();
-    this.illuminateSequence();
-  }
-
-  illuminateSequence(): void {
-    this.isIlluminating = true;
-    let delay = 0;
-
-    this.sequence.forEach((color) => {
-      setTimeout(() => this.illuminateButton(color), delay);
-      delay += 1000; // 1-second delay per color
+  ngOnInit() {
+    this.colors.forEach(color => {
+      this.illuminatedStates[color] = 'off';
     });
-
-    setTimeout(() => {
-      this.isIlluminating = false;
-      this.shuffleColors();
-    }, 15000); // 15 seconds illumination
   }
 
-  illuminateButton(color: string): void {
-    const button = document.getElementById(color);
-    if (button) {
-      button.classList.add('illuminated');
-      setTimeout(() => button.classList.remove('illuminated'), 500);
+  setIlluminated(color: string, state: boolean) {
+    this.illuminatedStates[color] = state ? 'on' : 'off';
+  }
+
+  onClick(color: string): void {
+    if (!this.isIlluminating) {
+      this.onColorClick(color);
+      // Quick flash when clicked
+      this.setIlluminated(color, true);
+      setTimeout(() => this.setIlluminated(color, false), 200);
     }
-  }
-
-  shuffleColors(): void {
-    this.shuffledColors = this.gameService.shuffleSequence();
-  }
-
-  onColorClick(color: string): void {
-    if (this.isIlluminating) return;
-
-    this.userSequence.push(color);
-    if (this.chronoStart === null) {
-      this.chronoStart = Date.now(); // Start the chrono on first click
-    }
-  }
-
-  onSubmit(): void {
-    if (this.chronoStart !== null) {
-      this.chronoTime = Math.floor((Date.now() - this.chronoStart) / 1000);
-      this.gameService.recordTimeTaken(this.chronoTime);
-    }
-
-    const isCorrect = this.gameService.verifySequence(this.userSequence);
-    if (isCorrect) {
-      alert(`Correct! Time taken: ${this.chronoTime} seconds`);
-      this.gameService.nextLevel();
-      this.sequence = this.gameService.getSequence();
-      this.resetGame();
-    } else {
-      alert('Incorrect! Game Over.');
-      this.resetGame();
-    }
-  }
-
-  resetGame(): void {
-    this.userSequence = [];
-    this.chronoStart = null;
-    this.chronoTime = 0;
-    this.illuminateSequence();
   }
 }
