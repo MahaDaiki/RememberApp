@@ -1,0 +1,10 @@
+<div class="color-buttons-container">
+  <div
+    *ngFor="let color of colors"
+    [id]="color"
+    [style.backgroundColor]="color"
+    class="color-button"
+    [class.disabled]="isIlluminating"
+    (click)="onClick(color)">
+  </div>
+</div>

@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import {RouterOutlet} from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-banner',
   templateUrl: './banner.component.html',
   styleUrl: './banner.component.css',
+  imports: [RouterModule],
   animations: [
     trigger('bounce', [
       state('normal', style({transform: 'scale(1)'})),

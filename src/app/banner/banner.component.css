@@ -17,7 +17,9 @@
   background: #eaeaea;
   border-radius: 20px;
   padding: 20px 100px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+
+
   z-index: 2;
   justify-content: center;
   align-items: center;

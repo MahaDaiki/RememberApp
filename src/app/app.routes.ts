@@ -1,3 +1,8 @@
 import { Routes } from '@angular/router';
-
-export const routes: Routes = [];
+import { GamePageComponent } from './game/game-page/game-page.component';
+import { BannerComponent } from './banner/banner.component';
+export const routes: Routes = [
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'game', component: GamePageComponent },
+  { path: 'home', component: BannerComponent},
+];

@@ -1,0 +1,53 @@
+<div class="game-page">
+  <h1>Level {{ level }}</h1>
+
+  <div class="timer" *ngIf="!gameOver && showButtons">
+    <ng-container *ngIf="timeLeft > 0">
+      Memorize the sequence: {{ timeLeft }} seconds left
+    </ng-container>
+    <ng-container *ngIf="timeLeft === 0">
+      Time elapsed: {{ elapsedTime }} seconds
+    </ng-container>
+  </div>
+
+  <app-color-buttons
+    [colors]="isIlluminating ? sequence : shuffledColors"
+    [isIlluminating]="isIlluminating"
+    [onColorClick]="handleColorClick">
+  </app-color-buttons>
+
+  <div class="controls" *ngIf="!isIlluminating && !gameOver">
+    <button class="submit-button" (click)="onSubmit()" [disabled]="userSequence.length !== sequence.length">
+      Validate
+    </button>
+    <button class="reset-button" (click)="onReset()">Reset</button>
+  </div>
+
+  <div class="sequence-display" *ngIf="!gameOver && !isIlluminating">
+    <div class="selected-colors">
+      Your sequence:
+      <div *ngFor="let color of userSequence"
+           class="color-preview"
+           [style.backgroundColor]="color">
+      </div>
+    </div>
+  </div>
+
+  <!-- Correct Answer Popup -->
+  <div class="popup correct-popup" *ngIf="showCorrectPopup">
+    <div class="popup-content success">
+      <h2>Correct!</h2>
+      <p>Time taken: {{ lastScore }} seconds</p>
+      <p>Preparing next level...</p>
+    </div>
+  </div>
+
+  <!-- Game Over Popup -->
+  <div class="popup game-over-popup" *ngIf="gameOver">
+    <div class="popup-content failure">
+      <h2>Game Over!</h2>
+      <p>You reached level: {{ level }}</p>
+      <button class="restart-button" (click)="startNewGame()">Play Again</button>
+    </div>
+  </div>
+</div>
